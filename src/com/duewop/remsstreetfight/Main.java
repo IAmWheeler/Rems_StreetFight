@@ -2,6 +2,7 @@ package com.duewop.remsstreetfight;
 
 import com.duewop.remsstreetfight.core.Controller;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -14,6 +15,14 @@ import java.util.List;
 public class Main extends Application {
 
     private Stage primaryStage;
+
+	/**
+	 * Returns the main stage.
+	 * @return primaryStage - Stage - Stage being used
+	 */
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
 
     @Override
     public void start(Stage primaryStage) {
@@ -41,14 +50,16 @@ public class Main extends Application {
                 primaryStage.setScene(scene);
 				primaryStage.initStyle(StageStyle.UNDECORATED);
 				primaryStage.show();
+				primaryStage.setOnCloseRequest(e -> System.exit(0));
 
                 // Give the controller access to the main app.
                 Controller controller = loader.getController();
-                controller.SetupRumble(rawArguments);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+				controller.setMainApp(this);
+                controller.StartListening();
+        } catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
     public static void main(String[] args) {
